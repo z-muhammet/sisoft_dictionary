@@ -10,13 +10,20 @@ public class FileProcess {
 
   public File findFileByName(String fileName) {
     File directory = new File("src/data/");
-    System.out.println("Aranan dosya: " + fileName + ".txt");
     File[] files = directory.listFiles((dir, name) -> name.toLowerCase().equals(fileName.toLowerCase() + ".txt"));
-    System.out.println(directory.getAbsolutePath());
+
+    if (files == null || files.length == 0) {
+      directory = new File("data/");
+      files = directory.listFiles((dir, name) -> name.toLowerCase().equals(fileName.toLowerCase() + ".txt"));
+    }
+
     try {
       // Eğer birden fazla dosaa varsa ilkini döndür
       if (files != null && files.length > 0) {
         return files[0];
+      } else {
+        System.out.println("Dosya bulunamadı: " + fileName + ".txt");
+        return null;
       }
     } catch (Exception e) {
       System.out.println("Dosya arama sırasında bir hata oluştu: " + e.getMessage());
@@ -30,12 +37,12 @@ public class FileProcess {
     if (file != null) {
       try (BufferedReader br = new BufferedReader(new FileReader(file))) {
         String line;
-        boolean isEmpty = true;
         while ((line = br.readLine()) != null) {
-          lines.add(line.toLowerCase(Locale.ENGLISH));
-          isEmpty = false;
+          if (!line.trim().isEmpty()) { // Boş satırları kontrol et
+            lines.add(line.toLowerCase(Locale.ENGLISH));
+          }
         }
-        if (isEmpty) {
+        if (lines.isEmpty()) {
           System.out.println("Dosya içi boş.");
           return null;
         }
