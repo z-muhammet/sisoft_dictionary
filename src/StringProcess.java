@@ -1,6 +1,8 @@
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Collections;
+import java.util.ArrayList;
 
 public class StringProcess {
 
@@ -27,8 +29,37 @@ public class StringProcess {
         System.out.println("İşlenen kelime sayısı: " + i);
       }
     }
-
+    System.out.println("Toplam işlenen kelime sayısı: " + i);
     return root;
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<String> search(Map<Character, Object> root, String prefix) {
+    Map<Character, Object> currentMap = root;
+    for (char c : prefix.toCharArray()) {
+      if (!currentMap.containsKey(c)) {
+        return Collections.emptyList();
+      }
+      currentMap = (Map<Character, Object>) currentMap.get(c);
+    }
+
+    List<String> results = new ArrayList<>();
+    findAllWords(currentMap, prefix, results);
+    return results;
+  }
+
+  @SuppressWarnings("unchecked")
+  private void findAllWords(Map<Character, Object> node, String currentWord, List<String> results) {
+    for (Map.Entry<Character, Object> entry : node.entrySet()) {
+      char key = entry.getKey();
+
+      if (key == '*') {
+        results.add(currentWord);
+      } else {
+        Map<Character, Object> nextNode = (Map<Character, Object>) entry.getValue();
+        findAllWords(nextNode, currentWord + key, results);
+      }
+    }
   }
 
 }

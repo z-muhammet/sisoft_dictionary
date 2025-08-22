@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FileProcess {
 
@@ -31,7 +32,7 @@ public class FileProcess {
         String line;
         boolean isEmpty = true;
         while ((line = br.readLine()) != null) {
-          lines.add(line.toLowerCase());
+          lines.add(line.toLowerCase(Locale.ENGLISH));
           isEmpty = false;
         }
         if (isEmpty) {
